@@ -22,6 +22,17 @@ const App = () => {
       })
   }, [])
 
+  //Agrego un effect hook que, cuando carga la pagina, se fija si ya hay un usuario guardado en el localstorage
+  //de ser asi almacena su info y token, por lo tanto mantiene al usuario conectado
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedNoteappUser")
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      noteService.setToken(user.token)
+    }
+  }, [])
+
   const addNote = (event) => {
     event.preventDefault()
     const noteObject = {
@@ -68,6 +79,10 @@ const App = () => {
       const user = await loginService.login({
         username, password
       })
+
+      window.localStorage.setItem(
+        "loggedNoteappUser", JSON.stringify(user)
+      )
       noteService.setToken(user.token) //Setteo el token que se necesita para poder agregar una nota
       //La respuesta del servidor se guarda en el campo user del estado de la app (datos de usuario y token)
       setUser(user)
