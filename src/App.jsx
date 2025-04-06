@@ -87,7 +87,7 @@ const App = () => {
 
   //Agrego funciones que van a cargar de forma condicional los formularios de login y agregar notas
   //Si no estoy logueado va a cargarse el formulario de login, si si estoy logueado va a cargarse el formulario de agregar notas
-  const loginForm = () => {
+  const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
         username <input type="text" value={username} name="Username" onChange={({ target }) => setUsername(target.value)} />
@@ -97,14 +97,14 @@ const App = () => {
       </div>
       <button type="submit">login</button>
     </form>
-  }
+  )
 
-  const noteForm = () => {
+  const noteForm = () => (
     <form onSubmit={addNote}>
       <input value={newNote} onChange={handleNoteChange} />
       <button type="submit">save</button>
     </form>
-  }
+  )
 
   return (
     <div>
@@ -112,8 +112,7 @@ const App = () => {
       <Notification message={errorMessage} />
 
       {/* Cargo los formularios de forma condicional usando las funciones que defini mas arriba */}
-      {user === null && loginForm()}
-      {user !== null && noteForm()}
+      {user === null ? loginForm() : <div><p>{user.name} logged-in</p> {noteForm()}</div>}
 
       {/* <h2>Login</h2>
       <form onSubmit={handleLogin}>
@@ -152,13 +151,13 @@ const App = () => {
           />
         )}
       </ul>
-      <form onSubmit={addNote}>
+      {/* <form onSubmit={addNote}>
       <input
           value={newNote}
           onChange={handleNoteChange}
         />
         <button type="submit">save</button>
-      </form>
+      </form> */}
       <Footer />
     </div>
   )
