@@ -85,12 +85,37 @@ const App = () => {
     ? notes
     : notes.filter(note => note.important)
 
+  //Agrego funciones que van a cargar de forma condicional los formularios de login y agregar notas
+  //Si no estoy logueado va a cargarse el formulario de login, si si estoy logueado va a cargarse el formulario de agregar notas
+  const loginForm = () => {
+    <form onSubmit={handleLogin}>
+      <div>
+        username <input type="text" value={username} name="Username" onChange={({ target }) => setUsername(target.value)} />
+      </div>
+      <div>
+        password <input type="password" value={password} name="Password" onChange={({ target }) => setPassword(target.value)} />
+      </div>
+      <button type="submit">login</button>
+    </form>
+  }
+
+  const noteForm = () => {
+    <form onSubmit={addNote}>
+      <input value={newNote} onChange={handleNoteChange} />
+      <button type="submit">save</button>
+    </form>
+  }
+
   return (
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
 
-      <h2>Login</h2>
+      {/* Cargo los formularios de forma condicional usando las funciones que defini mas arriba */}
+      {user === null && loginForm()}
+      {user !== null && noteForm()}
+
+      {/* <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -111,7 +136,7 @@ const App = () => {
           />
         </div>
         <button type="submit">login</button>
-      </form>
+      </form> */}
 
       <div>
         <button onClick={() => setShowAll(!showAll)}>
