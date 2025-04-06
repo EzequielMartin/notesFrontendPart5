@@ -5,6 +5,8 @@ import Footer from './components/Footer'
 import noteService from './services/notes'
 import loginService from "./services/login"
 import LoginForm from "./components/Login"
+import NoteForm from './components/NoteForm'
+import Togglable from './components/Toggleable'
 
 const App = () => {
   const [notes, setNotes] = useState([])
@@ -103,35 +105,28 @@ const App = () => {
     ? notes
     : notes.filter(note => note.important)
 
-    const loginForm = () => {
-      const hideWhenVisible = { display: loginVisible ? 'none' : '' }
-      const showWhenVisible = { display: loginVisible ? '' : 'none' }
-  
-      return (
-        <div>
-          <div style={hideWhenVisible}>
-            <button onClick={() => setLoginVisible(true)}>log in</button>
-          </div>
-          <div style={showWhenVisible}>
-            <LoginForm
-              username={username}
-              password={password}
-              handleUsernameChange={({ target }) => setUsername(target.value)}
-              handlePasswordChange={({ target }) => setPassword(target.value)}
-              handleSubmit={handleLogin}
-            />
-            <button onClick={() => setLoginVisible(false)}>cancel</button>
-          </div>
-        </div>
-      )
-    }
+  const loginForm = () => {
+    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+    const showWhenVisible = { display: loginVisible ? '' : 'none' }
 
-  const noteForm = () => (
-    <form onSubmit={addNote}>
-      <input value={newNote} onChange={handleNoteChange} />
-      <button type="submit">save</button>
-    </form>
-  )
+    return (
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setLoginVisible(true)}>log in</button>
+        </div>
+        <div style={showWhenVisible}>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+          <button onClick={() => setLoginVisible(false)}>cancel</button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -139,7 +134,18 @@ const App = () => {
       <Notification message={errorMessage} />
 
       {/* Cargo los formularios de forma condicional usando las funciones que defini mas arriba */}
-      {user === null ? loginForm() : <div><p>{user.name} logged-in</p> {noteForm()}</div>}
+      {user === null ?
+       loginForm() :
+        <div>
+          <p>{user.name} logged-in</p> 
+          <Togglable buttonLabel="new note">
+            <NoteForm 
+              onSubmit={addNote}
+              value={newNote}
+              handleChange={handleNoteChange}
+            />
+          </Togglable>
+        </div>}
 
       {/* <h2>Login</h2>
       <form onSubmit={handleLogin}>
