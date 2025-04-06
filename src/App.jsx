@@ -68,6 +68,7 @@ const App = () => {
       const user = await loginService.login({
         username, password
       })
+      noteService.setToken(user.token) //Setteo el token que se necesita para poder agregar una nota
       //La respuesta del servidor se guarda en el campo user del estado de la app (datos de usuario y token)
       setUser(user)
       //Vacio los campos del formulario
