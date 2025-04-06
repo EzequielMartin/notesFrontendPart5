@@ -37,18 +37,17 @@ const App = () => {
     }
   }, [])
 
-  const addNote = (event) => {
-    event.preventDefault()
-    const noteObject = {
-      content: newNote,
-      important: Math.random() > 0.5,
-    }
-  
+  const addNote = (noteObject) => {
+    // event.preventDefault()
+    // const noteObject = {
+    //   content: newNote,
+    //   important: Math.random() > 0.5,
+    // }
+    
     noteService
       .create(noteObject)
         .then(returnedNote => {
         setNotes(notes.concat(returnedNote))
-        setNewNote('')
       })
   }
 
@@ -128,24 +127,19 @@ const App = () => {
     )
   }
 
+  const noteForm = () => (
+    <Togglable buttonLabel="New note">
+      <NoteForm createNote={addNote} />
+    </Togglable>
+  )
+
   return (
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
 
       {/* Cargo los formularios de forma condicional usando las funciones que defini mas arriba */}
-      {user === null ?
-       loginForm() :
-        <div>
-          <p>{user.name} logged-in</p> 
-          <Togglable buttonLabel="new note">
-            <NoteForm 
-              onSubmit={addNote}
-              value={newNote}
-              handleChange={handleNoteChange}
-            />
-          </Togglable>
-        </div>}
+      {user === null ? loginForm() : <div><p>{user.name} logged-in</p> {noteForm()} </div>}
 
       {/* <h2>Login</h2>
       <form onSubmit={handleLogin}>
