@@ -4,6 +4,7 @@ import Notification from './components/Notification'
 import Footer from './components/Footer'
 import noteService from './services/notes'
 import loginService from "./services/login"
+import LoginForm from "./components/Login"
 
 const App = () => {
   const [notes, setNotes] = useState([])
@@ -13,6 +14,7 @@ const App = () => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
+  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     noteService
@@ -101,19 +103,28 @@ const App = () => {
     ? notes
     : notes.filter(note => note.important)
 
-  //Agrego funciones que van a cargar de forma condicional los formularios de login y agregar notas
-  //Si no estoy logueado va a cargarse el formulario de login, si si estoy logueado va a cargarse el formulario de agregar notas
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username <input type="text" value={username} name="Username" onChange={({ target }) => setUsername(target.value)} />
-      </div>
-      <div>
-        password <input type="password" value={password} name="Password" onChange={({ target }) => setPassword(target.value)} />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  )
+    const loginForm = () => {
+      const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+      const showWhenVisible = { display: loginVisible ? '' : 'none' }
+  
+      return (
+        <div>
+          <div style={hideWhenVisible}>
+            <button onClick={() => setLoginVisible(true)}>log in</button>
+          </div>
+          <div style={showWhenVisible}>
+            <LoginForm
+              username={username}
+              password={password}
+              handleUsernameChange={({ target }) => setUsername(target.value)}
+              handlePasswordChange={({ target }) => setPassword(target.value)}
+              handleSubmit={handleLogin}
+            />
+            <button onClick={() => setLoginVisible(false)}>cancel</button>
+          </div>
+        </div>
+      )
+    }
 
   const noteForm = () => (
     <form onSubmit={addNote}>
